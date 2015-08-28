@@ -1,0 +1,14 @@
+extends layout
+
+block content
+	h1= title
+	p Welcome to #{title}
+  
+	ul
+		li 
+			a(href='/users/list') User List
+		ul
+			li 
+				a(href='/users/newuser') Add User
+		li
+			a(href='/helloworld') Hello World		

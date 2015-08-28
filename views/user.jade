@@ -1,0 +1,10 @@
+extends layout
+
+block content
+	h1.
+		User
+	p
+		form(name="login", action"/updateUser", method="post")
+		#{id}
+		input(type="text", name="login", value="#{login}")
+		button#btnSubmit(type="submit") Update
