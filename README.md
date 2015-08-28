@@ -31,8 +31,30 @@ $ npm install pg
 $ npm install pg-promise
 ```
 
+* Install nodemon 
+
+```
+$ npm install -g nodemon
+```
+And modify the package.json from 
+```
+  "scripts": {
+    "start": "node ./bin/www"
+```
+to
+```
+  "scripts": {
+    "start": "nodemon ./bin/www"
+```
+
 # Configuration
 To change the configuration for the Postgres database connection, modify the db_config.js.
 [Additional options for postgres](https://github.com/brianc/node-postgres/blob/master/lib/defaults.js)
 
 Ensure the changes are made when [setting up the test database] (https://github.com/vitaly-t/pg-promise/blob/master/README.md#testing)
+
+# Start Up
+Run the following command in the application folder
+```
+$ npm start
+```
