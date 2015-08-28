@@ -4,6 +4,15 @@ var router = express.Router();
 var dbreq = require('../db');
 
 /* GET users listing. */
+router.route("/test")
+	.get(function(req, res) {
+	dbreq.increment();
+	results = dbreq.getCount();
+	res.json(results);
+	
+});
+
+/* GET users listing. */
 router.route("/list")
 	.get(function(req, res) {
 	dbreq.getUserList(function(data) {
@@ -12,7 +21,7 @@ router.route("/list")
 		});
 	}, function(reason) {
 		res.json({ errors: [reason] }).status(503);
-	});
+	});	
 });
 
 /* GET New User page. */
