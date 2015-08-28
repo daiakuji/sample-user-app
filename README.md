@@ -5,8 +5,8 @@ Basic application to view a list of users and add/modify/delete users
 
 ---
 
-* Uses Express, Postgres and pg-promise
-* Uses Jade template
+* Uses [Express](http://expressjs.com/), [Postgres](http://www.postgresql.org/), [node-postgres](https://github.com/brianc/node-postgres) and [pg-promise] (https://github.com/vitaly-t/pg-promise)
+* Uses [Jade](http://jade-lang.com/) template
 * Basic CRUD operations
 
 ---
