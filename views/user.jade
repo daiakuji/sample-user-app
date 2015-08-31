@@ -4,7 +4,12 @@ block content
 	h1.
 		User
 	p
-		form(name="login", action"/updateUser", method="post")
-		#{id}
-		input(type="text", name="login", value="#{login}")
-		button#btnSubmit(type="submit") Update
+		//- Need to set the form to post and have input hidden value of put
+		form#formEditUser(name="editlogin", action="/users/#{id}", method="post")
+			input(type="hidden", name="_method", value="put")
+			#{id}
+			input#inputUserName(type="text", name="login", value="#{login}")
+			button#btnSubmit(type="submit") Update
+		form(name="dellogin", action="/users/#{id}", method="post")
+			input(type="hidden", name="_method", value="delete")
+			button#btn(type="submit") Delete

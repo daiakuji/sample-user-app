@@ -3,12 +3,16 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var csrf = require('csurf')
 var bodyParser = require('body-parser');
-
+var helmet = require('helmet');
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var session = require('express-session')
 var app = express();
+
+var csrfProtection = csrf({ cookie: true });
+var methodOverride = require('method-override')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,14 +23,32 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(methodOverride(function(req, res){
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    // look in urlencoded POST bodies and delete it 
+    var method = req.body._method
+    delete req.body._method
+    return method
+  }
+}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//Load Helmet
+app.use(helmet());  
 
 app.use(function(req, res, next) {
   res.locals.ua = req.get('User-Agent');
   next();
 });
 
+app.set('trust proxy', 1); // trust first proxy
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
+  
 app.use('/', routes);
 app.use('/users', users);
 

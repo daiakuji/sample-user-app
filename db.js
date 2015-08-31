@@ -27,8 +27,7 @@ var count = 1;
 
 module.exports = {
 	getUserList: function(success,fail){
-		console.log(cn);
-	db.query("select * from users where active=$1", true)
+		db.query("select * from users where active=$1 order by id", true)
 		.then(success,fail);
 	},
 
@@ -38,26 +37,35 @@ module.exports = {
 	},
 
 	addUser: function(body, success, fail){
-		db.one("insert into users(login, active) values($1, $2) returning id",
-			[body.login, true])
-			.then(success,fail);
+		db.tx(function (t) {
+			return promise.all([
+				t.one("insert into users(login, active) values($1, $2) returning id",
+						[body.login, true])				//,
+				// Set an audit row
+				//t.none("insert into audit(status, id) values($1, $2)",
+				//    ['active', 123])
+			]);
+		})
+		/*db.one("insert into users(login, active) values($1, $2) returning id",
+				[body.login, true])*/
+		.then(success, fail);	
 	},
 
-	updateUser: function(id, body, success, fail){
+	updateUser: function(id, body, success, fail){		
 		db.tx(function (t) {
-		return promise.all([
-			t.none("update users set login=$1 where id=$2",
-				[body.login, id])
-			//,
-			// Set an audit row
-			//t.none("insert into audit(status, id) values($1, $2)",
-			//    ['active', 123])
-		]);
+			return promise.all([
+				t.none("update users set login=$1 where id=$2",
+					[body.login, id])
+				//,
+				// Set an audit row
+				//t.none("insert into audit(status, id) values($1, $2)",
+				//    ['active', 123])
+			]);
 	})
 		.then(success,fail);
 	},
 
-	deleteUser: function(id, body, success, fail){
+	deleteUser: function(id, success, fail){
 		db.tx(function (t) {
 		// t = this
 		return promise.all([
@@ -68,11 +76,7 @@ module.exports = {
 			//	['active', 123])
 		]);
 	})
-		.then(function (data) {
-			// success;
-		}, function (reason) {
-			// error;
-		});
+		.then(success,fail);
 	},
 
 	increment: function() {
