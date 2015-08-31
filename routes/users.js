@@ -43,7 +43,6 @@ router.post('/adduser', function(req, res) {
 router.route("/:id")
 	.get(function(req, res) {
 		dbreq.getUser(req.params.id,function(data) {
-			console.log(data);
 			if (data[0] != null) {
 				res.render('user', {
 					"id"	:	data[0].id,
@@ -55,7 +54,9 @@ router.route("/:id")
 				res.redirect("/users/list");
 			}
 		}, function(reason) {
-			res.json({ errors: [reason] }).status(503);
+			console.log(reason);
+			//res.json({ errors: [reason] }).status(503);
+			res.redirect("/users/list");
 		});
 	})
 	/* POST to Update User Service - Uses input type hidden, value put in the Jade*/
@@ -63,7 +64,9 @@ router.route("/:id")
 		dbreq.updateUser(req.params.id, req.body, function(data) {
 			res.redirect("/users/"+req.params.id);
 		}, function(reason) {
-			res.json({ errors: [reason] }).status(503);
+			console.log(reason);
+			//res.json({ errors: [reason] }).status(503);
+			res.redirect("/users/list");
 		});
 	})
 	/* DELETE to Delete User Service*/
@@ -72,8 +75,10 @@ router.route("/:id")
 		dbreq.deleteUser(req.params.id, function() {
 			res.redirect("/users/list");
 		}, function(reason) {
-			res.json({ errors: [reason] }).status(503);
+			console.log(reason);
+			//res.json({ errors: [reason] }).status(503);
+			res.redirect("/users/list");
 		});
-	});		
+	});	
 
 module.exports = router;

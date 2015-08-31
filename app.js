@@ -1,18 +1,24 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
+// Dependencies
+var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var csrf = require('csurf')
-var bodyParser = require('body-parser');
+var express = require('express');
+var favicon = require('serve-favicon');
 var helmet = require('helmet');
-var routes = require('./routes/index');
+var logger = require('morgan');
+var methodOverride = require('method-override')
+var path = require('path');
+var session = require('express-session');
+
+// Routing Logic
 var users = require('./routes/users');
-var session = require('express-session')
+var routes = require('./routes/index');
+
+// Create instance of express
 var app = express();
 
+// Create csurf instance
 var csrfProtection = csrf({ cookie: true });
-var methodOverride = require('method-override')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,6 +29,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+// Handle hidden input method
 app.use(methodOverride(function(req, res){
   if (req.body && typeof req.body === 'object' && '_method' in req.body) {
     // look in urlencoded POST bodies and delete it 
@@ -49,6 +56,7 @@ app.use(session({
   cookie: { secure: true }
 }));
   
+// Use routes 
 app.use('/', routes);
 app.use('/users', users);
 
@@ -65,23 +73,26 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
+	res.redirect("/");
+    /*
+	res.status(err.status || 500);
     res.render('error', {
       message: err.message,
       error: err
-    });
+    });*/
   });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
+  res.redirect("/");
+  /*res.status(err.status || 500);
   res.render('error', {
     message: err.message,
     error: {}
-  });
+  });*/
 });
 
-
+// Export app
 module.exports = app;
